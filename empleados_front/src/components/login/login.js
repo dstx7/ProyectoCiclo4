@@ -5,7 +5,8 @@ import app from "../../app.json"
 import './login.css'
 import { isNull } from "util";
 import Cookies from "universal-cookie";
-import {calcularExpirarSesion} from "../helper/helper";
+import {calcularExpirarSesion} from "../helper/helper";       //las funciones entre corchetes
+import Loading from "../loading/loading";                     //las clases se importan capitalizadas
 
 const {APIHOST} = app;
 const cookies = new Cookies();
@@ -14,6 +15,7 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       usuario:'',
       pass:'',
       
@@ -21,6 +23,8 @@ export default class Login extends React.Component {
   }
 
   iniciarSesion(){
+    this.setState({ loading: true });
+
     axios.post(`${APIHOST}/usuarios/login`, {
       usuario: this.state.usuario,
       pass: this.state.pass,
@@ -36,17 +40,23 @@ export default class Login extends React.Component {
           expires:calcularExpirarSesion()
         })
       }
+      this.setState({ loading: false });
+
     } ) 
     .catch((err) => {
       console.log(err);
+      this.setState({ loading: false });
+
     })  
-    alert('Botón de Iniciar Sesión');
+    //alert('Botón de Iniciar Sesión');
   }
   
 
   render() {
     return (
       <Container id="login-container" >
+        <Loading show={this.state.loading} />
+
         <Row>
           <Col
           sm='12'
