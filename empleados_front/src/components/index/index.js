@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export default class inicio extends React.Component {
     constructor(props) {
         super(props);
