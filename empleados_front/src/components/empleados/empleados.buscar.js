@@ -1,85 +1,41 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
-import { request } from "../helper/helper";
-import "./empleados.buscar.css";
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory, {
-  PaginationProvider,
-  PaginationListStandalone,
-} from "react-bootstrap-table2-paginator";
-import { Route } from "react-router-dom";
+import "./empleados.css";
+import DataGrid from "../grid/grid";
+import { request } from  "../helper/helper";
 
-const products = [
-  {
-    id: 1,
-    name: "tito",
-    price: 1000,
-  },
-  {
-    id: 2,
-    name: "henry",
-    price: 99999999,
-  },
-  {
-    id: 3,
-    name: "yo",
-    price: 0.0,
-  },
-  {
-    id: 4,
-    name: "tito",
-    price: 1000,
-  },
-  {
-    id: 5,
-    name: "tito",
-    price: 1000,
-  },
-  {
-    id: 6,
-    name: "tito",
-    price: 1000,
-  },
-  {
-    id: 7,
-    name: "henry",
-    price: 99999999,
-  },
-  {
-    id: 8,
-    name: "yo",
-    price: 0.0,
-  },
-  {
-    id: 9,
-    name: "tito",
-    price: 1000,
-  },
-  {
-    id: 10,
-    name: "tito",
-    price: 1000,
-  },
-  {
-    id: 10,
-    name: "tito",
-    price: 1000,
-  },
-];
 const columns = [
   {
-    dataField: "id",
-    text: "Product ID",
+    dataField: "_id",
+    text: "ID",
+    hidden: true,
   },
   {
-    dataField: "name",
-    text: "Product Name",
+    dataField: "nombre",
+    text: "Nombre",
   },
   {
-    dataField: "price",
-    text: "Product Price",
+    dataField: "apellido_p",
+    text: "Primer Apellido",
+  },
+  {
+    dataField: "apellido_m",
+    text: "Segundo Apellido",
+  },
+  {
+    dataField: "telefono",
+    text: " Telefono",
+  },
+  {
+    dataField: "mail",
+    text: "Correo Electronico",
+  },
+  {
+    dataField: "direccion",
+    text: " Direccion",
   },
 ];
+
 
 export default class EmpleadosBuscar extends React.Component {
   constructor(props) {
@@ -88,40 +44,24 @@ export default class EmpleadosBuscar extends React.Component {
   }
   componentDidMount() {
     request
-      .get("/empleados")
+      .get(this.props.url)
       .then((response) => {
-        console.log(response.data);
+        this.setState({ rows: response.data });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
       });
   }
-  render() {
-    const options = {
-      custom: true,
-      totalSize: products.length,
-    };
 
+  render() {
     return (
       <Container id="empleados-buscar-container">
         <Row>
-          <h1>Buscar Empleados</h1>
+          <h1>Buscar empleados</h1>
         </Row>
-        <Route>
-          <PaginationProvider pagination={paginationFactory(options)}>
-            {({ paginationProps, paginationTableProps }) => (
-              <div>
-                <PaginationListStandalone {...paginationProps} />
-                <BootstrapTable
-                  keyField="id"
-                  data={products}
-                  columns={columns}
-                  {...paginationTableProps}
-                />
-              </div>
-            )}
-          </PaginationProvider>
-        </Route>
+        <Row>      
+          <DataGrid url="/empleados" columns={ columns }/>
+        </Row>
       </Container>
     );
   }
