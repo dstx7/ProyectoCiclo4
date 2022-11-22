@@ -60,7 +60,7 @@ export default class EmpleadosBuscar extends React.Component {
           <h1>Buscar empleados</h1>
         </Row>
         <Row>      
-          <DataGrid url="/empleados" columns={ columns }/>
+          <DataGrid url="/empleados" columns={ columns } showEditButton={true} />
         </Row>
       </Container>
     );

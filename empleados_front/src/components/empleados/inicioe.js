@@ -10,6 +10,8 @@ export default class Empleados extends React.Component {
     this.state = {
         currentTab:'buscar',
     };
+    this.changeTab = this.changeTab.bind(this);
+
   }
 
   changeTab(tab){

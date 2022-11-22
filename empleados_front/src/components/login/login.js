@@ -41,6 +41,7 @@ export default class Login extends React.Component {
         })
 
         this.props.history.push(window.open('/empleados'));
+        
       }
       this.setState({ loading: false });
 
