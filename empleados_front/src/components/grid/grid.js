@@ -9,72 +9,78 @@ import paginationFactory, {
 import ToolkitProvider, {
   Search,
 } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
-import { request } from  "../helper/helper";
+import { request } from "../helper/helper";
+import Loading from "../loading/loading";
 
 const { SearchBar } = Search;
 
 export default class DataGrid extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {  
-            rows: [],
-        }
-    }
-    componentDidMount() {
-        this.getData();
-      }
-      getData(){
-        request
-          .get(this.props.url)
-          .then((response) => {
-            this.setState({ rows: response.data });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    render() { 
-        const options = {
-            custom: true,
-            totalSize: this.state.rows.length,
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      rows: [],
+    };
+  }
+  componentDidMount() {
+    this.getData();
+  }
+  getData() {
+    this.setState({ loading: false });
+    request
+      .get(this.props.url)
+      .then((response) => {
+        this.setState({ rows: response.data, loading: false });
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
+        console.log(err);
+      });
+  }
 
-          };
-        return ( 
-            <ToolkitProvider
-            keyField="tp"
-            data={this.state.rows}
-            columns={this.props.columns}            
-            search>
-            {(props) => (
-              <>
-                <PaginationProvider pagination={paginationFactory(options)}>
-                  {({ paginationProps, paginationTableProps }) => (
-                    <div>
-                      <Row>
-                        <Col>
-                          <SizePerPageDropdownStandalone {...paginationProps} />
-                        </Col>
-                        <Col>
-                          <SearchBar {...props.searchProps} />
-                        </Col>
-                      </Row>
-                      <hr />
-                      <BootstrapTable
-                        keyField="bt"
-                        data={this.state.rows}
-                        columns={this.props.columns}
-                        {...paginationTableProps}
-                        {...props.baseProps}
-                      />
-                      <PaginationListStandalone {...paginationProps} />
-                    </div>
-                  )}
-                </PaginationProvider>
-              </>
-            )}
-          </ToolkitProvider>
-         );
-    }
+  render() {
+    const options = {
+      custom: true,
+      totalSize: this.state.rows.length,
+    };
+    return (
+      <>
+      <Loading show={this.state.loading} />
+        <ToolkitProvider
+          keyField="tp"
+          data={this.state.rows}
+          columns={this.props.columns}
+          search
+        >
+          {(props) => (
+            <>
+              <PaginationProvider pagination={paginationFactory(options)}>
+                {({ paginationProps, paginationTableProps }) => (
+                  <div>
+                    <Row>
+                      <Col>
+                        <SizePerPageDropdownStandalone {...paginationProps} />
+                      </Col>
+                      <Col>
+                        <SearchBar {...props.searchProps} />
+                      </Col>
+                    </Row>
+                    <hr />
+                    <BootstrapTable
+                      keyField="bt"
+                      data={this.state.rows}
+                      columns={this.props.columns}
+                      {...paginationTableProps}
+                      {...props.baseProps}
+                    />
+                    <PaginationListStandalone {...paginationProps} />
+                  </div>
+                )}
+              </PaginationProvider>
+            </>
+          )}
+        </ToolkitProvider>
+      </>
+    );
+  }
 }
- 
-
