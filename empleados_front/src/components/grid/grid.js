@@ -55,12 +55,13 @@ export default class DataGrid extends React.Component {
       text: 'Editar',
       formatter: function priceFormatter(cell, row){
         console.log(row);
-        return <Button>
+        return (
+        <Button onClick={() => this.props.onClickEditButton(row)}>
           <FontAwesomeIcon icon={faEdit} />
-
         </Button>
-      }
-    }
+      );
+    },
+    };
   }
 
 
